@@ -1,17 +1,50 @@
-const push = require('web-push');
+// const push = require('web-push');
 
-//  let vapIdKeys = push.generateVAPIDKeys();
+// //  let vapIdKeys = push.generateVAPIDKeys();
 
 
-//  dont want regenerate every time this keys
+// //  dont want regenerate every time this keys
+// let vapIdKeys = {
+//     publicKey: 'BP06FrV_yDLeCwBTnAAVhir0SW4cjqhBrQamIs0BALKli2EqyCdewg-WqnDwNTwygNqyYfNWxiZCjlN2o-mYps4',
+//     privateKey: 'ZgOrGJihDB0PAWu0D5VQP6-wdhb9-RqcHoX0WrObbiQ'
+// };
+
+// push.setVapidDetails('mailto:antilinstanish@gmail.com', vapIdKeys.publicKey, vapIdKeys.privateKey);
+
+// let subscription = { "endpoint": "https://fcm.googleapis.com/fcm/send/dGfZ1aXS1nc:APA91bHyB3btcB4O0qqSGywdYGT08_yKzQewnsK7hH6e4Ewx1aaINwhnCbO2p07iFExmlULvs3ec0WWztmTqzWXFAJdCSw34DAx0phoF7L07p1GbNeo3jAxHbSfftiS7zLytJFg0Vrb7", "expirationTime": null, "keys": { "p256dh": "BDSEI0xU2Vj_oxJKlM9oU1zL6ySHA-DTUfcHkbn0krl65_OSUMqHiT7oQiLG4z3JNTt8AM51T7Ng_wJroFzzzD0", "auth": "KYbVEn_3y8KAvTrt222W4g" } };
+// push.sendNotification(subscription, 'test message');
+
+// console.log(vapIdKeys);
+
+const webPush = require('web-push');
+
 let vapIdKeys = {
     publicKey: 'BP06FrV_yDLeCwBTnAAVhir0SW4cjqhBrQamIs0BALKli2EqyCdewg-WqnDwNTwygNqyYfNWxiZCjlN2o-mYps4',
     privateKey: 'ZgOrGJihDB0PAWu0D5VQP6-wdhb9-RqcHoX0WrObbiQ'
 };
 
-push.setVapidDetails('mailto:antilinstanish@gmail.com', vapIdKeys.publicKey, vapIdKeys.privateKey);
+webPush.setVapidDetails(
+    'mailto:antilinstanish@gmail.com',
+    vapIdKeys.publicKey,
+    vapIdKeys.privateKey
+);
 
-let subscription = {};
-push.sendNotification(subscription, 'test message');
-
-console.log(vapIdKeys);
+// subscription should come from client!
+// const subscription = {
+//     "endpoint": "https://fcm.googleapis.com/fcm/send/dGfZ1aXS1nc:APA91bHyB3btcB4O0qqSGywdYGT08_yKzQewnsK7hH6e4Ewx1aaINwhnCbO2p07iFExmlULvs3ec0WWztmTqzWXFAJdCSw34DAx0phoF7L07p1GbNeo3jAxHbSfftiS7zLytJFg0Vrb7",
+//     "expirationTime": null,
+//     "keys": {
+//         "p256dh": "BDSEI0xU2Vj_oxJKlM9oU1zL6ySHA-DTUfcHkbn0krl65_OSUMqHiT7oQiLG4z3JNTt8AM51T7Ng_wJroFzzzD0",
+//         "auth": "KYbVEn_3y8KAvTrt222W4g"
+//     }
+// };
+const payload = JSON.stringify({
+    title: "Big Sale Today!",
+    body: "Get 50% off all items.",
+    icon: "https://yourcdn.com/icons/sale.png",
+    url: "https://yourcustomer.com/sale"
+});
+const subscription = { "endpoint": "https://fcm.googleapis.com/fcm/send/dGfZ1aXS1nc:APA91bHyB3btcB4O0qqSGywdYGT08_yKzQewnsK7hH6e4Ewx1aaINwhnCbO2p07iFExmlULvs3ec0WWztmTqzWXFAJdCSw34DAx0phoF7L07p1GbNeo3jAxHbSfftiS7zLytJFg0Vrb7", "expirationTime": null, "keys": { "p256dh": "BDSEI0xU2Vj_oxJKlM9oU1zL6ySHA-DTUfcHkbn0krl65_OSUMqHiT7oQiLG4z3JNTt8AM51T7Ng_wJroFzzzD0", "auth": "KYbVEn_3y8KAvTrt222W4g" } }
+webPush.sendNotification(subscription, payload)
+    .then(response => console.log("✅ Notification sent!", response))
+    .catch(error => console.error("❌ Push error:", error));
